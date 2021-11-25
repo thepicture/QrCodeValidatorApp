@@ -10,7 +10,8 @@
         Height="450" 
         Width="800"
         WindowState="Maximized"
-        WindowStyle="None">
+        WindowStyle="None"
+        Topmost="False">
     <Window.DataContext>
         <viewsmodels:QrCodeViewModel></viewsmodels:QrCodeViewModel>
     </Window.DataContext>
@@ -86,6 +87,16 @@
                             Width="200"
                             Margin="0 0 0 10"
                             Opacity="{Binding QrCodeText.Length, FallbackValue=0}">
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=AttemptsLeft}"
+                                                     Value="0">
+                                            <Setter Property="Opacity" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <Button Content="Проверить"
                                 Background="Transparent"
                                 Foreground="#0d4cd3"
@@ -118,9 +129,10 @@
         </Grid>
         <Border Background="White"
                 Margin="10"
-                CornerRadius="10">
+                CornerRadius="10 10 0 0">
             <Image HorizontalAlignment="Left"
-                   Source="../Resources/logo.jpg"></Image>
+                   Source="../Resources/logo.jpg"
+                   Margin="10 0 0 0"></Image>
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="5"
                                   BlurRadius="20"
@@ -151,7 +163,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Source="../Resources/robot.png"
                                    Width="200"
-                                   Margin="0 10 0 0">
+                                   Margin="10 10 0 0">
                                 <Image.RenderTransform>
                                     <TranslateTransform x:Name="MyTransform"></TranslateTransform>
                                 </Image.RenderTransform>
@@ -159,8 +171,8 @@
                                     <EventTrigger RoutedEvent="Loaded">
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <DoubleAnimation From="-10"
-                                                                 To="10"
+                                                <DoubleAnimation From="-5"
+                                                                 To="5"
                                                                  AutoReverse="True"
                                                                  Duration="0:0:4"
                                                                  RepeatBehavior="Forever"
@@ -187,7 +199,10 @@
                 </Grid>
                 <Grid Grid.Row="1">
                     <Viewbox Margin="20">
-                        <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource qr_codesDrawingImage}"
+                                   Width="10"
+                                   Margin="0 0 5 0"></Image>
                             <TextBlock Text="Пожалуйста, просканируйте QR-код веб-камерой"
                                    FontFamily="Arial"></TextBlock>
                         </StackPanel>

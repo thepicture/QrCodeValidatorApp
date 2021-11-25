@@ -57,6 +57,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Services\IMessageService.cs" />
+    <Compile Include="Services\ISoundPlayService.cs" />
+    <Compile Include="Services\MessageBoxService.cs" />
+    <Compile Include="Services\WavSoundPlayService.cs" />
     <Compile Include="ViewsModels\QrCodeViewModel.cs" />
     <Compile Include="ViewsModels\ViewModelBase.cs" />
     <Page Include="Views\QrCodeView.xaml">
@@ -104,6 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fatalError.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\badAttempt.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
