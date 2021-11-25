@@ -19,11 +19,108 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"></BooleanToVisibilityConverter>
+        </Grid.Resources>
+        <Grid Panel.ZIndex="1"
+              Grid.RowSpan="3"
+              Visibility="{Binding IsQrCodeInWriteMode, Converter={StaticResource BoolToVisibility}}">
+            <Grid Background="Gray"
+              Opacity=".8"></Grid>
+            <Border Background="White"
+                Width="600"
+                Height="300"
+                CornerRadius="10">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="5"
+                                  BlurRadius="20"
+                                  Opacity=".2"></DropShadowEffect>
+                </Border.Effect>
+                <Viewbox>
+                    <StackPanel Margin="20">
+                        <TextBox VerticalAlignment="Center"
+                     Margin="20"
+                     Width="200">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <TextBox BorderThickness="0"
+                                                             Name="TextBoxTemplate"
+                                                             Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.QrCodeText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                                        <TextBlock Text="Начните вводить QR-код"
+                                                       Foreground="Gray"
+                                                       Margin="0 0 0 10"
+                                                       IsHitTestVisible="False">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="{x:Type TextBlock}">
+                                                                    <Setter Property="Visibility"
+                                                                        Value="Hidden"></Setter>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ElementName=TextBoxTemplate, Path=Text.Length}"
+                                                                         Value="0">
+                                                                            <Setter Property="Visibility"
+                                                                        Value="Visible"></Setter>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                    <Line StrokeThickness="2"
+                                              Stroke="Black"
+                                              X2="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TextBox}, Path=ActualWidth}"></Line>
+                                                </StackPanel>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <Border Background="#e4ecfd"
+                            CornerRadius="10"
+                            VerticalAlignment="Bottom"
+                            Width="200"
+                            Margin="0 0 0 10"
+                            Opacity="{Binding QrCodeText.Length, FallbackValue=0}">
+                            <Button Content="Проверить"
+                                Background="Transparent"
+                                Foreground="#0d4cd3"
+                                Padding="10"
+                                BorderThickness="0"
+                                FontFamily="Arial"
+                                Cursor="Hand"
+                                FontSize="14"
+                                Command="{Binding CheckWrittenQrCode}"></Button>
+                        </Border>
+                        <Border Background="#e4ecfd"
+                            CornerRadius="10"
+                            VerticalAlignment="Bottom"
+                            Width="200"
+                            Margin="0 0 0 10">
+                            <Button Content="Назад"
+                                Background="Transparent"
+                                Foreground="#0d4cd3"
+                                Padding="10"
+                                BorderThickness="0"
+                                FontFamily="Arial"
+                                Cursor="Hand"
+                                FontSize="14"
+                                CommandParameter="False"
+                                Command="{Binding SetQrCodeInputAsKeyboard}"></Button>
+                        </Border>
+                    </StackPanel>
+                </Viewbox>
+            </Border>
+        </Grid>
         <Border Background="White"
                 Margin="10"
                 CornerRadius="10">
             <Image HorizontalAlignment="Left"
-                   Source="../Resources/logo.png"></Image>
+                   Source="../Resources/logo.jpg"></Image>
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="5"
                                   BlurRadius="20"
@@ -52,7 +149,9 @@
                     </Grid.Background>
                     <Viewbox HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="../Resources/robot.png">
+                            <Image Source="../Resources/robot.png"
+                                   Width="200"
+                                   Margin="0 10 0 0">
                                 <Image.RenderTransform>
                                     <TranslateTransform x:Name="MyTransform"></TranslateTransform>
                                 </Image.RenderTransform>
@@ -63,7 +162,7 @@
                                                 <DoubleAnimation From="-10"
                                                                  To="10"
                                                                  AutoReverse="True"
-                                                                 Duration="0:0:2"
+                                                                 Duration="0:0:4"
                                                                  RepeatBehavior="Forever"
                                                                  Storyboard.TargetProperty="RenderTransform.Y">
                                                     <DoubleAnimation.EasingFunction>
@@ -75,24 +174,40 @@
                                     </EventTrigger>
                                 </Image.Triggers>
                             </Image>
-                            <TextBlock Text="Предъявите QR-код для доступа к компьютеру"
+                            <TextBlock Text="Необходимо предъявить QR-код для доступа к компьютеру"
                                Foreground="White"
                                FontFamily="Arial"
-                               Opacity=".9"
+                               Opacity=".8"
                                FontSize="60"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                               Margin="10"></TextBlock>
+                               Margin="20"></TextBlock>
                         </StackPanel>
                     </Viewbox>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Viewbox Margin="20">
                         <StackPanel>
-                        <TextBlock Text="Пожалуйста, просканируйте QR-код веб-камерой"
+                            <TextBlock Text="Пожалуйста, просканируйте QR-код веб-камерой"
                                    FontFamily="Arial"></TextBlock>
                         </StackPanel>
                     </Viewbox>
+                    <Border Background="#e4ecfd"
+                            CornerRadius="10"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Margin="20">
+                        <Button Content="Ввести вручную"
+                                Background="Transparent"
+                                Foreground="#0d4cd3"
+                                Padding="10"
+                                BorderThickness="0"
+                                FontFamily="Arial"
+                                Cursor="Hand"
+                                FontSize="14"
+                                CommandParameter="True"
+                                Command="{Binding SetQrCodeInputAsKeyboard}"></Button>
+                    </Border>
                 </Grid>
             </Grid>
         </Border>

@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewsModels\QrCodeViewModel.cs" />
     <Compile Include="ViewsModels\ViewModelBase.cs" />
     <Page Include="Views\QrCodeView.xaml">
@@ -99,10 +100,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\robot.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\robot.png" />
+    <Resource Include="Resources\logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
