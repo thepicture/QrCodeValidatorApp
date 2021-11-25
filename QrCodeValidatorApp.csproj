@@ -56,8 +56,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\IListener.cs" />
-    <Compile Include="Models\ProcessListener.cs" />
     <Compile Include="ViewsModels\QrCodeViewModel.cs" />
     <Compile Include="ViewsModels\ViewModelBase.cs" />
     <Page Include="Views\QrCodeView.xaml">
