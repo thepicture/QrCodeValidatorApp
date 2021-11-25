@@ -9,11 +9,92 @@
         Title="{Binding Title}"
         Height="450" 
         Width="800"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
     <Window.DataContext>
         <viewsmodels:QrCodeViewModel></viewsmodels:QrCodeViewModel>
     </Window.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Background="White"
+                Margin="10"
+                CornerRadius="10">
+            <Image HorizontalAlignment="Left"
+                   Source="../Resources/logo.png"></Image>
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="5"
+                                  BlurRadius="20"
+                                  Opacity=".5"></DropShadowEffect>
+            </Border.Effect>
+        </Border>
+        <Border Grid.Row="1"
+                Margin="10"
+                Background="White"
+                CornerRadius="10">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="5"
+                                  BlurRadius="20"
+                                  Opacity=".5"></DropShadowEffect>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush>
+                            <GradientStop Offset="1" Color="#325de9"></GradientStop>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Viewbox HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Resources/robot.png">
+                                <Image.RenderTransform>
+                                    <TranslateTransform x:Name="MyTransform"></TranslateTransform>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation From="-10"
+                                                                 To="10"
+                                                                 AutoReverse="True"
+                                                                 Duration="0:0:2"
+                                                                 RepeatBehavior="Forever"
+                                                                 Storyboard.TargetProperty="RenderTransform.Y">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <SineEase EasingMode="EaseInOut"></SineEase>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <TextBlock Text="Предъявите QR-код для доступа к компьютеру"
+                               Foreground="White"
+                               FontFamily="Arial"
+                               Opacity=".9"
+                               FontSize="60"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                               Margin="10"></TextBlock>
+                        </StackPanel>
+                    </Viewbox>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Viewbox Margin="20">
+                        <StackPanel>
+                        <TextBlock Text="Пожалуйста, просканируйте QR-код веб-камерой"
+                                   FontFamily="Arial"></TextBlock>
+                        </StackPanel>
+                    </Viewbox>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
