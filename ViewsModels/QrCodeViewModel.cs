@@ -20,7 +20,7 @@ namespace QrCodeValidatorApp.ViewsModels
         private readonly ISoundPlayService _soundPlayService;
         private bool _isAppRunning;
         private DispatcherTimer _timer;
-        private ISettler _settler;
+        private readonly ISettler _settler;
         public QrCodeViewModel()
         {
             Title = "Госуслуги";
@@ -40,11 +40,6 @@ namespace QrCodeValidatorApp.ViewsModels
             IsAppRunning = false;
             _settler = new AutoStartSettler();
             _settler.Set();
-        }
-
-        private void SetAutostartIfNotSettled()
-        {
-           
         }
 
         private void OnCloseApp(object sender, EventArgs e)
@@ -130,6 +125,7 @@ namespace QrCodeValidatorApp.ViewsModels
                     if (_isAppRunning)
                     {
                         window.Show();
+                        _soundPlayService.Play(Properties.Resources.greetingSound);
                     }
                     else
                     {
