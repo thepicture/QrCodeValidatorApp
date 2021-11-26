@@ -20,6 +20,7 @@ namespace QrCodeValidatorApp.ViewsModels
         private readonly ISoundPlayService _soundPlayService;
         private bool _isAppRunning;
         private DispatcherTimer _timer;
+        private ISettler _settler;
         public QrCodeViewModel()
         {
             Title = "Госуслуги";
@@ -37,41 +38,13 @@ namespace QrCodeValidatorApp.ViewsModels
             _timer.Tick += OnCloseApp;
             _timer.Start();
             IsAppRunning = false;
-            SetAutostartIfNotSettled();
+            _settler = new AutoStartSettler();
+            _settler.Set();
         }
 
         private void SetAutostartIfNotSettled()
         {
-            const string HKLM = "HKEY_CURRENT_USER";
-            const string HKCU = "HKEY_LOCAL_MACHINE";
-            const string RUN_KEY_HKCU = @"Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run";
-            const string RUN_KEY_HKLM = @"SOFTWARE\\Microsoft\Windows\CurrentVersion\Run";
-            string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
-            try
-            {
-                if (Microsoft.Win32.Registry.GetValue(HKCU + "\\" + RUN_KEY_HKCU, "system33", null) == null)
-                {
-                    Microsoft.Win32.Registry.SetValue(HKCU + "\\" + RUN_KEY_HKCU, "system33", exePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            try
-            {
-                if (Microsoft.Win32.Registry.GetValue(HKLM + "\\" + RUN_KEY_HKLM, "system33", null) == null)
-                {
-                    Microsoft.Win32.Registry.SetValue(HKLM + "\\" + RUN_KEY_HKLM, "system33", exePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            RegistryKey rk = Registry.CurrentUser.OpenSubKey
-           ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            rk.SetValue("system33", exePath);
+           
         }
 
         private void OnCloseApp(object sender, EventArgs e)
