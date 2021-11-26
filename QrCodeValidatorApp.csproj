@@ -57,8 +57,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Models\AutoStartSettler.cs" />
-    <Compile Include="Models\ISettler.cs" />
     <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Services\ISoundPlayService.cs" />
     <Compile Include="Services\MessageBoxService.cs" />

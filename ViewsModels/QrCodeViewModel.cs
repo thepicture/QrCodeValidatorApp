@@ -1,10 +1,7 @@
-﻿using Microsoft.Win32;
-using QrCodeValidatorApp.Commands;
+﻿using QrCodeValidatorApp.Commands;
 using QrCodeValidatorApp.Models;
 using QrCodeValidatorApp.Services;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -19,8 +16,7 @@ namespace QrCodeValidatorApp.ViewsModels
         private readonly IMessageService _messageService;
         private readonly ISoundPlayService _soundPlayService;
         private bool _isAppRunning;
-        private DispatcherTimer _timer;
-        private readonly ISettler _settler;
+        private readonly DispatcherTimer _timer;
         public QrCodeViewModel()
         {
             Title = "Госуслуги";
@@ -30,21 +26,63 @@ namespace QrCodeValidatorApp.ViewsModels
                                                   ShowInvalidAttemptError);
             _messageService = new MessageBoxService();
             _soundPlayService = new WavSoundPlayService();
-            CloseApp = new RelayCommand(null, (obj) => IsAppRunning = false);
+            CloseApp = new RelayCommand(null, CloseCurrentApp);
+            double seconds = GetSecondsFromCommandLineOrDefault();
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMinutes(10)
+                Interval = TimeSpan.FromSeconds(seconds)
             };
             _timer.Tick += OnCloseApp;
             _timer.Start();
             IsAppRunning = false;
-            _settler = new AutoStartSettler();
-            _settler.Set();
+        }
+
+        private void CloseCurrentApp(object obj)
+        {
+            IsAppRunning = false;
+            try
+            {
+                _ = System.IO.File.Create(System.IO.Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "doNotRunAgain"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static double GetSecondsFromCommandLineOrDefault()
+        {
+            try
+            {
+                if (HasCommandLineArgs())
+                {
+                    return double.Parse(Environment.GetCommandLineArgs()[1]);
+                }
+                else
+                {
+                    return TimeSpan.FromMinutes(10).TotalSeconds;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return TimeSpan.FromMinutes(10).TotalSeconds;
+            }
+        }
+
+        private static bool HasCommandLineArgs()
+        {
+            return Environment.GetCommandLineArgs().Length > 1
+                && double.TryParse(
+                    Environment.GetCommandLineArgs()[1],
+                    out _);
         }
 
         private void OnCloseApp(object sender, EventArgs e)
         {
-            //IsAppRunning = true;
+            IsAppRunning = true;
             (sender as DispatcherTimer).Stop();
         }
 
