@@ -2,7 +2,10 @@
 using QrCodeValidatorApp.Models;
 using QrCodeValidatorApp.Services;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace QrCodeValidatorApp.ViewsModels
 {
@@ -11,9 +14,11 @@ namespace QrCodeValidatorApp.ViewsModels
         private QrCode _currentQrCode;
         private bool _isQrCodeWriteMode = false;
         private string _qrCodeText;
-        private int _attemptsLeft = 5;
+        private int _attemptsLeft = 3;
         private readonly IMessageService _messageService;
         private readonly ISoundPlayService _soundPlayService;
+        private bool _isAppRunning;
+        private DispatcherTimer _timer;
         public QrCodeViewModel()
         {
             Title = "Госуслуги";
@@ -23,6 +28,20 @@ namespace QrCodeValidatorApp.ViewsModels
                                                   ShowInvalidAttemptError);
             _messageService = new MessageBoxService();
             _soundPlayService = new WavSoundPlayService();
+            CloseApp = new RelayCommand(null, (obj) => IsAppRunning = false);
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMinutes(10)
+            };
+            _timer.Tick += OnCloseApp;
+            _timer.Start();
+            IsAppRunning = false;
+        }
+
+        private void OnCloseApp(object sender, EventArgs e)
+        {
+            IsAppRunning = true;
+            (sender as DispatcherTimer).Stop();
         }
 
         private void ShowInvalidAttemptError(object obj)
@@ -59,6 +78,7 @@ namespace QrCodeValidatorApp.ViewsModels
 
         public ICommand SetQrCodeInputAsKeyboard { get; set; }
         public ICommand CheckWrittenQrCode { get; set; }
+        public ICommand CloseApp { get; set; }
 
         public bool IsQrCodeInWriteMode
         {
@@ -86,6 +106,25 @@ namespace QrCodeValidatorApp.ViewsModels
                 if (_attemptsLeft == 0)
                 {
                     _soundPlayService.Play(Properties.Resources.fatalError);
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsAppRunning
+        {
+            get => _isAppRunning; set
+            {
+                _isAppRunning = value;
+                foreach(System.Windows.Window window in App.Current.Windows)
+                {
+                    if (_isAppRunning)
+                    {
+                        window.Show();
+                    } else
+                    {
+                        window.Hide();
+                    }
                 }
                 OnPropertyChanged();
             }

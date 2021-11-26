@@ -12,6 +12,10 @@
         WindowState="Maximized"
         WindowStyle="None"
         Topmost="False">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding CloseApp}"
+                    Gesture="Ctrl+Q"></KeyBinding>
+    </Window.InputBindings>
     <Window.DataContext>
         <viewsmodels:QrCodeViewModel></viewsmodels:QrCodeViewModel>
     </Window.DataContext>
@@ -20,12 +24,9 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.Resources>
-            <BooleanToVisibilityConverter x:Key="BoolToVisibility"></BooleanToVisibilityConverter>
-        </Grid.Resources>
         <Grid Panel.ZIndex="1"
               Grid.RowSpan="3"
-              Visibility="{Binding IsQrCodeInWriteMode, Converter={StaticResource BoolToVisibility}}">
+              Visibility="{Binding IsQrCodeInWriteMode, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid Background="Gray"
               Opacity=".8"></Grid>
             <Border Background="White"
@@ -90,7 +91,7 @@
                             <Border.Style>
                                 <Style TargetType="{x:Type Border}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=AttemptsLeft}"
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.AttemptsLeft}"
                                                      Value="0">
                                             <Setter Property="Opacity" Value="0" />
                                         </DataTrigger>
