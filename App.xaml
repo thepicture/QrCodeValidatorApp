@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:QrCodeValidatorApp"
              StartupUri="./Views/QrCodeView.xaml">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"></BooleanToVisibilityConverter>
         <DrawingImage x:Key="qr_codesDrawingImage">
             <DrawingImage.Drawing>
                 <DrawingGroup ClipGeometry="M0,0 V308.667 H308.667 V0 H0 Z">

@@ -11,7 +11,7 @@
         Width="800"
         WindowState="Maximized"
         WindowStyle="None"
-        Topmost="False">
+        Topmost="True">
     <Window.InputBindings>
         <KeyBinding Command="{Binding CloseApp}"
                     Gesture="Ctrl+Q"></KeyBinding>
