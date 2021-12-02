@@ -11,7 +11,9 @@
         Width="800"
         WindowState="Maximized"
         WindowStyle="None"
-        Topmost="True">
+        Name="QrCodeVindow"
+        Topmost="True"
+        KeyDown="QrCodeWindow_KeyDown">
     <Window.InputBindings>
         <KeyBinding Command="{Binding CloseApp}"
                     Gesture="Ctrl+Q"></KeyBinding>
