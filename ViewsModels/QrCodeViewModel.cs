@@ -2,6 +2,8 @@
 using QrCodeValidatorApp.Models;
 using QrCodeValidatorApp.Services;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -16,7 +18,7 @@ namespace QrCodeValidatorApp.ViewsModels
         private readonly IMessageService _messageService;
         private readonly ISoundPlayService _soundPlayService;
         private bool _isAppRunning = true;
-        private readonly DispatcherTimer _timer;
+
         public QrCodeViewModel()
         {
             Title = "Госуслуги";
@@ -26,8 +28,9 @@ namespace QrCodeValidatorApp.ViewsModels
                                                   ShowInvalidAttemptError);
             _messageService = new MessageBoxService();
             _soundPlayService = new WavSoundPlayService();
+            _soundPlayService.Play(Properties.Resources.greetingSound);
             CloseApp = new RelayCommand(null, CloseCurrentApp);
-            DispatchCommandArgs();
+            Task.Run(() => DispatchCommandArgs());
         }
 
         private void CloseCurrentApp(object obj)
@@ -39,12 +42,9 @@ namespace QrCodeValidatorApp.ViewsModels
         {
             try
             {
-                if (HasCommandLineArgs())
+                if (Environment.GetCommandLineArgs().ToList().Contains("warning"))
                 {
-                    if (bool.Parse(Environment.GetCommandLineArgs()[1]))
-                    {
-                        ShowExploitAttemptMessage();
-                    }
+                    ShowExploitAttemptMessage();
                 }
             }
             catch (Exception ex)
@@ -67,17 +67,6 @@ namespace QrCodeValidatorApp.ViewsModels
                                         Environment.MachineName);
         }
 
-        private static bool HasCommandLineArgs()
-        {
-            return Environment.GetCommandLineArgs().Length > 2
-                && double.TryParse(
-                    Environment.GetCommandLineArgs()[1],
-                    out _)
-                && bool.TryParse(
-                    Environment.GetCommandLineArgs()[2],
-                    out _);
-        }
-
         private void OnCloseApp(object sender, EventArgs e)
         {
             IsAppRunning = true;
@@ -94,6 +83,11 @@ namespace QrCodeValidatorApp.ViewsModels
                     "Пожалуйста, попробуйте ещё раз. {0}{0}" +
                     "Осталось попыток до блокировки системы: " +
                     $"{AttemptsLeft}", Environment.NewLine));
+            }
+            else
+            {
+                _messageService.Show("Система заблокирована. Ваши действия " +
+                    "отправлены заведущему отделением");
             }
         }
 
@@ -161,7 +155,6 @@ namespace QrCodeValidatorApp.ViewsModels
                     if (_isAppRunning)
                     {
                         window.Show();
-                        _soundPlayService.Play(Properties.Resources.greetingSound);
                     }
                     else
                     {

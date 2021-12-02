@@ -7,7 +7,9 @@
             System.Windows.MessageBox.Show(text,
                                            "Информация",
                                            System.Windows.MessageBoxButton.OK,
-                                           System.Windows.MessageBoxImage.Information);
+                                           System.Windows.MessageBoxImage.Information,
+                                           System.Windows.MessageBoxResult.OK,
+                                           System.Windows.MessageBoxOptions.DefaultDesktopOnly);
         }
     }
 }
